@@ -1,0 +1,61 @@
+//Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
+//Example 1:
+//Input: "babad"
+//Output: "bab"
+//Note: "aba" is also a valid answer.
+//Example 2:
+//Input: "cbbd"
+//Output: "bb"
+//之前自己写过一个算法，76ms，比较慢，重复遍历的过程有点多，之后学习了manacher算法，时间复杂度为o(n),结果是4ms，还算比较令人满意。
+//核心有几个部分，一个是通过在字符串中两两插入#来将所有情况变成奇数类。之后就是用已有的大的回文串中的对称小回文串来简化部分算法。
+int min(int a,int b){
+    if(a<b){
+        return a;
+    }
+    return b;
+}
+char* longestPalindrome(char* s) {
+    int len=strlen(s);
+    char t[2*len+3];
+    int max=1;
+    int begin;
+    int p[2*len+3];
+    p[0]=0;
+    t[0]='$';
+    for(int i=1;i<=len;i++){
+        t[2*i-1]='#';
+        t[2*i]=s[i-1];
+    }
+    t[2*len+1]='#';
+    t[2*len+2]='\0';
+    int mx=0;
+    int id=1;
+    for(int i=1;i<2*len+2;i++){
+        if(mx>i){
+            p[i]=min(mx-i,p[2*id-i]);
+        }
+        else{
+            p[i]=1;
+        }
+        while(t[i+p[i]]==t[i-p[i]]){
+            p[i]++;
+        }
+        if(i+p[i]>mx){
+            mx=i+p[i];
+            id=i;
+        }
+    }
+    for(int i=1;i<2*len+2;i++){
+        if(p[i]>max){
+            max=p[i];
+            begin=(i-p[i])/2;
+        }
+    }
+    char (*c)[max];
+    c=(char*)malloc(max*sizeof(char));
+    for(int i=0;i<max-1;i++){
+        (*c)[i]=s[begin+i];
+    }
+    (*c)[max-1]='\0';
+    return c;
+}
