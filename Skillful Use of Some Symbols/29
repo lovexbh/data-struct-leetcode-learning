@@ -1,0 +1,26 @@
+//Given two integers dividend and divisor, divide two integers without using multiplication, division and mod operator.
+//Return the quotient after dividing dividend by divisor.
+//The integer division should truncate toward zero.
+//直接加时间复杂度太高，这里把商分解为2的幂用<<，即二进制往前移动一位来实现乘二的计算。
+#define MAX 2147483647
+#define MIN (-MAX-1)
+int divide(int dividend, int divisor) {
+    if(!divisor||(divisor==-1&&dividend==MIN)){
+        return MAX;
+    }
+    int flag=((dividend<0)^(divisor<0))?-1:1;//^表示两者皆是或皆非为0；一是一非为1；
+    long long divd=labs(dividend);//labs为长整型的绝对值函数
+    long long divs=labs(divisor);
+    int ret=0;
+    while(divd>=divs){
+        long long temp=divs;
+        long long mul=1;
+        while(divd>=(temp<<1)){
+            temp<<=1;
+            mul<<=1;
+        }
+        ret+=mul;
+        divd-=temp;
+    }
+    return flag==1?ret:-ret;
+}
