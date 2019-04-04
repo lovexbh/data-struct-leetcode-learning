@@ -1,0 +1,26 @@
+//Given a collection of distinct integers, return all possible permutations.
+//递归的思想，注意这个递归函数和dfs还有树的遍历递归写法的相似性
+class Solution {
+public:
+   vector<vector<int> > permute(vector<int> &num) {
+        vector<vector<int> > result;
+        permutationrecusive(num,0,result);
+        return result;
+        
+    }
+    void permutationrecusive(vector<int> &num,int k, vector<vector<int> >&result)
+    {
+        if(k == num.size())
+        {
+            result.push_back(num);
+            return ;
+        }
+        
+        for(int i = k;i < num.size();i++)
+        {
+            swap(num[k],num[i]);
+            permutationrecusive(num,k+1,result);
+            swap(num[k],num[i]);
+        }
+    }
+};
